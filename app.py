@@ -66,6 +66,10 @@ def predict_with_cnn(image_path):
 
 # Define page functions
 def home():
+    # Render content on top of the background image
+    st.title("Home Page")
+    
+    st.header("Welcome to the Early Autism Prediction in children App")
     # Load the background image
     background_image_path = os.path.join(base_path, "img", "B1.jpg")
     background_image_path_2=os.path.join(base_path,'img','B2.jpg')
@@ -78,9 +82,7 @@ def home():
     # Render the background image
     st.image(background_image_path, use_column_width=True)
 
-    # Render content on top of the background image
-    st.title("Home Page")
-    st.write("Welcome to the Early Autism Prediction in children App")
+  
      
 
     st.header("About the Application")
