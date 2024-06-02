@@ -70,7 +70,7 @@ def home():
         """
         <style>
         .stApp {
-            background-image: url("img/B1");
+            background-image: url("img/B1.jpg");
             background-size: cover;
         }
         </style>
