@@ -1,5 +1,6 @@
 import streamlit as st
 import numpy as np
+import tensorflow as tf
 from tensorflow.keras.models import load_model, model_from_json
 from tensorflow.keras.preprocessing import image
 from keras.preprocessing.sequence import pad_sequences
