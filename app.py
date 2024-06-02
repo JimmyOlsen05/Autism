@@ -88,8 +88,8 @@ def predict():
     ]
 
     with col1:
-        st.header("Enter MCHAT Details")
-        sequence = [st.selectbox(f"A{i+1} {A_questions[i]}", [0, 1]) for i in range(10)]
+        st.header("ANSWER THE FOLLOWING QUESTIONS")
+        sequence = [st.selectbox(f"Q{i+1} : {A_questions[i]}", [0, 1]) for i in range(10)]
 
     with col2:
         st.header("Upload Image")
