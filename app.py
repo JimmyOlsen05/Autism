@@ -80,7 +80,7 @@ def home():
         return
 
     # Render the background image
-    st.image(background_image_path, use_column_width=True)
+    st.image(background_image_path, use_column_width=False)
 
   
      
