@@ -80,9 +80,20 @@ def home():
         return
 
     # Render the background image
-    st.image(background_image_path, use_column_width=False)
+    st.image(background_image_path, use_column_width=True)
 
-  
+    # Render the background color
+    st.markdown(
+        f"""
+        <style>
+        .stApp {{
+            background-color: #1E1E1E; /* Dark background color */
+            color: #FFFFFF; /* Light text color */
+        }}
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
      
 
     st.header("About the Application")
