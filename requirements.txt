@@ -1,5 +1,8 @@
 streamlit
-tensorflow
-keras
 dill
 pillow
+tensorflow==2.15.0
+keras==2.15.0
+dill
+streamlit
+
