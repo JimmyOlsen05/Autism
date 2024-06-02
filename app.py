@@ -87,7 +87,7 @@ def home():
         f"""
         <style>
         .stApp {{
-            background-color: #1E1E1E; /* Dark background color */
+            background-color: #2C2C2C; /* Dark background color */
             color: #FFFFFF; /* Light text color */
         }}
         </style>
