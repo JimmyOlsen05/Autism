@@ -1,15 +1,23 @@
 import streamlit as st
 import numpy as np
+import os
 from tensorflow.keras.models import load_model, model_from_json
+from tensorflow.keras.initializers import Orthogonal, GlorotUniform, Zeros
 from tensorflow.keras.preprocessing import image
 from keras.preprocessing.sequence import pad_sequences
 import dill
-import os
+
+# Ensure correct Keras initializers are used
+initializers = {
+    'Orthogonal': Orthogonal(),
+    'GlorotUniform': GlorotUniform(),
+    'Zeros': Zeros()
+}
 
 # Function to load models safely
 def safe_load_model(model_path):
     try:
-        model = load_model(model_path)
+        model = load_model(model_path, custom_objects=initializers)
         st.write(f"Loaded model from {model_path}")
         return model
     except Exception as e:
@@ -21,7 +29,7 @@ def safe_load_model_from_json(json_path, weights_path):
     try:
         with open(json_path, 'r') as json_file:
             model_json = json_file.read()
-        model = model_from_json(model_json)
+        model = model_from_json(model_json, custom_objects=initializers)
         model.load_weights(weights_path)
         st.write(f"Loaded model from {json_path} and {weights_path}")
         return model
@@ -107,4 +115,3 @@ if st.button("Predict"):
             st.error("One or more models failed to load. Please check the logs for details.")
     else:
         st.write("Please upload an image file.")
-
