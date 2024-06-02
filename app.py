@@ -66,9 +66,19 @@ def predict_with_cnn(image_path):
 
 # Define page functions
 def home():
+    st.markdown(
+        """
+        <style>
+        .stApp {
+            background-image: url("img/B1");
+            background-size: cover;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
     st.title("Home Page")
     st.write("Welcome to the Autism Prediction Ensemble Model application!")
-
 def predict():
     st.title("Autism Prediction Ensemble Model")
 
