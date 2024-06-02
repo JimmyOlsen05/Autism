@@ -1,24 +1,19 @@
 import streamlit as st
 import numpy as np
-import os
 from tensorflow.keras.models import load_model, model_from_json
-from tensorflow.keras.initializers import Orthogonal, GlorotUniform, Zeros
 from tensorflow.keras.preprocessing import image
 from keras.preprocessing.sequence import pad_sequences
 import dill
-
-# Ensure correct Keras initializers are used
-initializers = {
-    'Orthogonal': Orthogonal(),
-    'GlorotUniform': GlorotUniform(),
-    'Zeros': Zeros()
-}
+import os
 
 # Function to load models safely
 def safe_load_model(model_path):
     try:
-        model = load_model(model_path, custom_objects=initializers)
-        st.write(f"Loaded model from {model_path}")
+        model = load_model(model_path, custom_objects={
+            'Orthogonal': tf.keras.initializers.Orthogonal(),
+            'GlorotUniform': tf.keras.initializers.GlorotUniform(),
+            'Zeros': tf.keras.initializers.Zeros()
+        })
         return model
     except Exception as e:
         st.error(f"Failed to load model from {model_path}: {e}")
@@ -29,9 +24,8 @@ def safe_load_model_from_json(json_path, weights_path):
     try:
         with open(json_path, 'r') as json_file:
             model_json = json_file.read()
-        model = model_from_json(model_json, custom_objects=initializers)
+        model = model_from_json(model_json)
         model.load_weights(weights_path)
-        st.write(f"Loaded model from {json_path} and {weights_path}")
         return model
     except Exception as e:
         st.error(f"Failed to load model from {json_path} and {weights_path}: {e}")
@@ -40,7 +34,7 @@ def safe_load_model_from_json(json_path, weights_path):
 # Define the base path to your files
 base_path = os.path.dirname(os.path.abspath(__file__))
 
-# Load the trained models
+# Load models
 lstm_model = safe_load_model(os.path.join(base_path, 'LSTM_model.h5'))
 cnn_model = safe_load_model_from_json(os.path.join(base_path, 'CNN_MODEL.json'), os.path.join(base_path, 'CNN_MODEL_weights.h5'))
 meta_model = safe_load_model(os.path.join(base_path, 'Meta_Model.save.h5'))
@@ -53,7 +47,7 @@ try:
 except Exception as e:
     st.error(f"Failed to load additional data: {e}")
 
-# Function to predict with LSTM model
+# Prediction functions
 def predict_with_lstm(sequence, categorical_features):
     padded_sequence = pad_sequences([sequence], maxlen=max_sequence_length, padding='post', truncating='post')
     padded_sequence_reshaped = np.expand_dims(padded_sequence, axis=-1)
@@ -61,57 +55,83 @@ def predict_with_lstm(sequence, categorical_features):
     prediction = lstm_model.predict([padded_sequence_reshaped, categorical_features_int])
     return prediction[0][0]
 
-# Function to predict with CNN model
-img_width, img_height = 150, 150
-
 def predict_with_cnn(image_path):
-    img = image.load_img(image_path, target_size=(img_width, img_height))
+    img = image.load_img(image_path, target_size=(150, 150))
     x = image.img_to_array(img)
     x /= 255.0  # Rescale if necessary
     x = np.expand_dims(x, axis=0)  # Add batch dimension
     prediction = cnn_model.predict(x)
     return prediction[0][0]
 
-# Streamlit interface
-st.title("Autism Prediction Ensemble Model")
+# Define page functions
+def home():
+    st.title("Home Page")
+    st.write("Welcome to the Autism Prediction Ensemble Model application!")
 
-# Input fields for MCHAT details
-st.header("Enter MCHAT Details")
-sequence = []
-for i in range(1, 11):
-    sequence.append(st.selectbox(f"A{i}", [0, 1]))
+def predict():
+    st.title("Autism Prediction Ensemble Model")
 
-# Input fields for categorical features
-categorical_features = []
-for col in X_train_cat.columns:
-    categorical_features.append(st.selectbox(col, [0, 1]))
+    col1, col2 = st.columns(2)
 
-# File uploader for image
-st.header("Upload Image")
-uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
+    A_questions = [
+        "Does your child look at you when you call his/her name?",
+        "How easy is it for you to get eye contact with your child?",
+        "Does your child point to indicate that s/he wants something? (e.g. a toy that is out of reach)",
+        "Does your child point to share interest with you? (e.g. pointing at an interesting sight)",
+        "Does your child pretend? (e.g. care for dolls, talk on a toy phone)",
+        "Does your child follow where you’re looking?",
+        "If you or someone else in the family is visibly upset, does your child show signs of wanting to comfort them? (e.g. stroking hair, hugging them)",
+        "Would you describe your child’s first words as:",
+        "Does your child use simple gestures? (e.g. wave goodbye)",
+        "Does your child stare at nothing with no apparent purpose?"
+    ]
 
-if st.button("Predict"):
-    if uploaded_file is not None:
-        # Save the uploaded file temporarily
-        temp_image_path = os.path.join(base_path, "temp_image.jpg")
-        with open(temp_image_path, "wb") as f:
-            f.write(uploaded_file.getbuffer())
-        
-        # Get predictions
-        if lstm_model and cnn_model and meta_model:
-            lstm_prediction = predict_with_lstm(sequence, categorical_features)
-            cnn_prediction = predict_with_cnn(temp_image_path)
-            ensemble_prediction = meta_model.predict([np.array([lstm_prediction]), np.array([cnn_prediction])])
-        
-            # Convert the prediction to class label (0 or 1)
-            predicted_class = 1 if ensemble_prediction > 0.5 else 0
-            if predicted_class == 1:
-                st.write("Prediction: Autistic")
+    with col1:
+        st.header("Enter MCHAT Details")
+        sequence = [st.selectbox(f"A{i+1} {A_questions[i]}", [0, 1]) for i in range(10)]
+
+    with col2:
+        st.header("Upload Image")
+        uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
+
+    if st.button("Predict"):
+        if uploaded_file is not None:
+            temp_image_path = os.path.join(base_path, "temp_image.jpg")
+            with open(temp_image_path, "wb") as f:
+                f.write(uploaded_file.getbuffer())
+
+            if lstm_model and cnn_model and meta_model:
+                with st.spinner('Predicting...'):
+                    lstm_prediction = predict_with_lstm(sequence, categorical_features)
+                    cnn_prediction = predict_with_cnn(temp_image_path)
+                    ensemble_prediction = meta_model.predict([np.array([lstm_prediction]), np.array([cnn_prediction])])
+
+                predicted_class = 1 if ensemble_prediction > 0.5 else 0
+                st.success("Prediction: Autistic" if predicted_class == 1 else "Prediction: Non-Autistic")
+                st.write(f"Predicted Class (Ensemble): {predicted_class}")
             else:
-                st.write("Prediction: Non-Autistic")
-            
-            st.write(f"Predicted Class (Ensemble): {predicted_class}")
+                st.error("One or more models failed to load. Please check the logs for details.")
         else:
-            st.error("One or more models failed to load. Please check the logs for details.")
-    else:
-        st.write("Please upload an image file.")
+            st.warning("Please upload an image file.")
+
+def contact():
+    st.title("Contact")
+    st.write("You can reach us at contact@autism-prediction.com")
+
+def info():
+    st.title("Information")
+    st.write("This application uses machine learning models to predict the likelihood of autism in children based on MCHAT details and images.")
+
+# Sidebar for navigation
+st.sidebar.title("Navigation")
+page = st.sidebar.radio("Go to", ["Home", "Predict", "Contact", "Info"])
+
+# Render the chosen page
+if page == "Home":
+    home()
+elif page == "Predict":
+    predict()
+elif page == "Contact":
+    contact()
+elif page == "Info":
+    info()
