@@ -66,19 +66,32 @@ def predict_with_cnn(image_path):
 
 # Define page functions
 def home():
+    def home():
+    # Load the background image
+    background_image_path = os.path.join(base_path, "img", "B1.jpg")
+
+    # Check if the image file exists
+    if not os.path.isfile(background_image_path):
+        st.error("Background image not found!")
+        return
+
+    # Render the background image
     st.markdown(
-        """
+        f"""
         <style>
-        .stApp {
-            background-image: url("img/B1.jpg");
+        .stApp {{
+            background-image: url("data:image/png;base64,{background_image_path}");
             background-size: cover;
-        }
+        }}
         </style>
         """,
         unsafe_allow_html=True
     )
+
+    # Render content on top of the background image
     st.title("Home Page")
     st.write("Welcome to the Autism Prediction Ensemble Model application!")
+
 def predict():
     st.title("Autism Prediction Ensemble Model")
 
