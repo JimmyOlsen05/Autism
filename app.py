@@ -68,6 +68,7 @@ def predict_with_cnn(image_path):
 def home():
     # Load the background image
     background_image_path = os.path.join(base_path, "img", "B1.jpg")
+    background_image_path_2=os.path.join(base_path,'img','B2.jpg')
 
     # Check if the image file exists
     if not os.path.isfile(background_image_path):
@@ -79,7 +80,27 @@ def home():
 
     # Render content on top of the background image
     st.title("Home Page")
-    st.write("Welcome to the Autism Prediction Ensemble Model application!")
+    st.write("Welcome to the Early Autism Prediction in children App")
+     
+
+    st.header("About the Application")
+    st.write("Welcome to our application developed to assist parents and caregivers in the early diagnosis of autism spectrum disorder (ASD) in children. Our goal is to provide a user-friendly platform that utilizes behavioral observations and image analysis to predict the likelihood of autism in children at an early age.")
+
+    st.header("How it Works")
+    st.write("Our application combines machine learning algorithms with behavioral assessments and image recognition technology to offer accurate predictions. Parents and caregivers can answer a series of questions related to the child's behavior, as well as upload an image of the child. Based on this information, our models generate predictions indicating whether the child is likely to be autistic or not.")
+
+    st.header("Importance of Early Detection")
+    st.write("Early detection of autism spectrum disorder is crucial for ensuring timely intervention and support for children. By identifying potential signs of autism at an early age, parents and caregivers can take proactive steps to seek professional evaluation and access appropriate resources and therapies for their child's development.")
+    st.image(background_image_path_2, use_column_width=True)
+    st.header("Disclaimer")
+    st.write("It's important to note that the predictions provided by our models are for informational purposes only and should not replace professional medical advice. We encourage users to consult healthcare professionals for accurate diagnosis and personalized treatment recommendations tailored to their child's unique needs.")
+
+    st.header("Get Started")
+    st.write("To get started, simply navigate to the 'Predict' page using the sidebar menu. Follow the instructions to answer the behavioral questions and upload an image of your child. Our models will then generate a prediction indicating the likelihood of autism.")
+
+    st.header("Contact Us")
+    st.write("Have questions or feedback? We'd love to hear from you! Feel free to reach out to us at [contact@autism-prediction.com](mailto:contact@autism-prediction.com) for any inquiries or assistance.")
+
 
 
 def predict():
