@@ -66,7 +66,6 @@ def predict_with_cnn(image_path):
 
 # Define page functions
 def home():
-    def home():
     # Load the background image
     background_image_path = os.path.join(base_path, "img", "B1.jpg")
 
