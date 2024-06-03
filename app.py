@@ -101,7 +101,13 @@ def home():
 
     st.header("How it Works")
     st.write("Our application combines machine learning algorithms with behavioral assessments and image recognition technology to offer accurate predictions. Parents and caregivers can answer a series of questions related to the child's behavior, as well as upload an image of the child. Based on this information, our models generate predictions indicating whether the child is likely to be autistic or not.")
-
+    st.header("What is Autism")
+    st.write("Autism, or autism spectrum disorder (ASD), refers to a broad range of conditions characterized by challenges with social skills, repetitive behaviors, speech and nonverbal communication. According to the Centers for Disease Control, autism affects an estimated 1 in 36 children and 1 in 45 adults in the United States today.")
+    st.header("What are the Causes of Autism")
+    st.write("There are many causes of autism. Research suggests that autism spectrum disorder (ASD) develops from a combination of: Genetic influences and Environmental influences, including social determinants These factors appear to increase the risk of autism and shape the type of autism that a child will develop. However, it’s important to keep in mind that increased risk is not the same as a cause. For example, some gene changes associated with autism can also be found in people who don’t have the disorder. Similarly, not everyone exposed to an environmental risk factor for autism will develop the disorder. In fact, most will not.")
+    st.header("What are the Symptoms of Autism")
+    st.write(" The two core autism symptoms are: Challenges with social communication and interaction skills and Restricted and repetitive behaviors")
+    st.write("While autism spectrum disorder (ASD) looks different from person to person, doctors look for these two symptoms when making a diagnosis. They also rate the severity of these symptoms based on the level of daily support the person requires. Severity levels range from level 1 (“requiring support") to level 3 (“requiring very substantial support”). Not all people with ASD present these two core symptoms the same way. Additionally, some people without ASD may exhibit these signs.")
     st.header("Importance of Early Detection")
     st.write("Early detection of autism spectrum disorder is crucial for ensuring timely intervention and support for children. By identifying potential signs of autism at an early age, parents and caregivers can take proactive steps to seek professional evaluation and access appropriate resources and therapies for their child's development.")
     st.image(background_image_path_2, use_column_width=True)
