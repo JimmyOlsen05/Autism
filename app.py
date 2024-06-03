@@ -121,7 +121,7 @@ def predict():
         f"""
         <style>
         .stApp {{
-            background-color: #2C2C2C; /* Dark background color */
+            background-color: #DAF7A6 ; /* Dark background color */
             color: #FFFFFF; /* Light text color */
         }}
         </style>
