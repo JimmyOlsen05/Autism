@@ -113,16 +113,14 @@ def home():
     st.header("Contact Us")
     st.write("Have questions or feedback? We'd love to hear from you! Feel free to reach out to us at [contact@autism-prediction.com](mailto:contact@autism-prediction.com) for any inquiries or assistance.")
 
-
-
 def predict():
     # Render the background color
     st.markdown(
         f"""
         <style>
         .stApp {{
-            background-color: #DAF7A6 ; /* Dark background color */
-            color: #FFFFFF; /* Light text color */
+            background-color: #DAF7A6 ; /* Light background color */
+            color: #000000; /* Dark text color */
         }}
         </style>
         """,
@@ -154,6 +152,14 @@ def predict():
     with col2:
         st.header("Upload Image")
         uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
+
+    # Add additional categorical features input
+    st.header("Additional Information")
+    categorical_features = [
+        st.selectbox("Select child's gender", [0, 1]),  # Assuming 0 for male and 1 for female
+        st.selectbox("Select family history of autism", [0, 1]),  # Assuming 0 for no and 1 for yes
+        # Add more categorical features as needed
+    ]
 
     if st.button("Predict"):
         if uploaded_file is not None:
