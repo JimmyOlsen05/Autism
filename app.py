@@ -44,7 +44,7 @@ meta_model = safe_load_model(os.path.join(base_path, 'Meta_Model.save.h5'))
 try:
     with open(os.path.join(base_path, 'autism_data.pkl'), 'rb') as f:
         encoded_sequences, categorical_cols, max_sequence_length, X_train_cat = dill.load(f)
-    st.write("Loaded additional data for predictions")
+    st.write(" ")
 except Exception as e:
     st.error(f"Failed to load additional data: {e}")
 
@@ -67,7 +67,7 @@ def predict_with_cnn(image_path):
 # Define page functions
 def home():
     # Render content on top of the background image
-    st.title("Home Page")
+    st.title("Home")
     
     st.header("Welcome to the Early Autism Prediction in children App")
     # Load the background image
