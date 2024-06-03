@@ -116,7 +116,19 @@ def home():
 
 
 def predict():
-    st.title("Autism Prediction Ensemble Model")
+    # Render the background color
+    st.markdown(
+        f"""
+        <style>
+        .stApp {{
+            background-color: #2C2C2C; /* Dark background color */
+            color: #FFFFFF; /* Light text color */
+        }}
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+    st.title("Autism Prediction App")
 
     col1, col2 = st.columns(2)
 
@@ -135,6 +147,8 @@ def predict():
 
     with col1:
         st.header("ANSWER THE FOLLOWING QUESTIONS")
+        st.write("Select '1' or '0' from the dropdowns")
+        st.write(" i.e Where 1 = Always, Usually or Sometimes and 0 = Rarely or Never ")
         sequence = [st.selectbox(f"Q{i+1} : {A_questions[i]}", [0, 1]) for i in range(10)]
 
     with col2:
