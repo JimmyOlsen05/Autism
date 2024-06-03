@@ -73,6 +73,9 @@ def home():
     # Load the background image
     background_image_path = os.path.join(base_path, "img", "B1.jpg")
     background_image_path_2=os.path.join(base_path,'img','B2.jpg')
+    background_image_path_3=os.path.join(base_path,'img','B3.jpg')
+    background_image_path_4=os.path.join(base_path,'img','B4.jpg')
+    background_image_path_5=os.path.join(base_path,'img','B5.jpg')
 
     # Check if the image file exists
     if not os.path.isfile(background_image_path):
@@ -88,10 +91,12 @@ def home():
     st.header("How it Works")
     st.write("Our application combines machine learning algorithms with behavioral assessments and image recognition technology to offer accurate predictions. Parents and caregivers can answer a series of questions related to the child's behavior, as well as upload an image of the child. Based on this information, our models generate predictions indicating whether the child is likely to be autistic or not.")
     st.header("What is Autism")
+    st.image(background_image_path_4, use_column_width=True)
     st.write("Autism, or autism spectrum disorder (ASD), refers to a broad range of conditions characterized by challenges with social skills, repetitive behaviors, speech and nonverbal communication. According to the Centers for Disease Control, autism affects an estimated 1 in 36 children and 1 in 45 adults in the United States today.")
     st.header("What are the Causes of Autism")
     st.write("There are many causes of autism. Research suggests that autism spectrum disorder (ASD) develops from a combination of: Genetic influences and Environmental influences, including social determinants These factors appear to increase the risk of autism and shape the type of autism that a child will develop. However, it’s important to keep in mind that increased risk is not the same as a cause. For example, some gene changes associated with autism can also be found in people who don’t have the disorder. Similarly, not everyone exposed to an environmental risk factor for autism will develop the disorder. In fact, most will not.")
     st.header("What are the Symptoms of Autism")
+    st.image(background_image_path_3, use_column_width=True)
     st.write(" The two core autism symptoms are: Challenges with social communication and interaction skills and Restricted and repetitive behaviors")
     st.write("While autism spectrum disorder looks different from person to person, doctors look for these two symptoms when making a diagnosis. They also rate the severity of these symptoms based on the level of daily support the person requires. Severity levels range from level 1 (requiring support) to level 3 (requiring very substantial support). Not all people with ASD present these two core symptoms the same way. Additionally, some people without ASD may exhibit these signs.")
     st.header("Importance of Early Detection")
@@ -101,7 +106,7 @@ def home():
     st.image(background_image_path_2, use_column_width=True)
     st.header("Disclaimer")
     st.write("It's important to note that the predictions provided by our models are for informational purposes only and should not replace professional medical advice. We encourage users to consult healthcare professionals for accurate diagnosis and personalized treatment recommendations tailored to their child's unique needs.")
-
+    st.image(background_image_path_5, use_column_width=True)
     st.header("Get Started")
     st.write("To get started, simply navigate to the 'Predict' page using the sidebar menu. Follow the instructions to answer the behavioral questions and upload an image of your child. Our models will then generate a prediction indicating the likelihood of autism.")
 
