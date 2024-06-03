@@ -81,21 +81,7 @@ def home():
 
     # Render the background image
     st.image(background_image_path, use_column_width=True)
-    """
-    # Render the background color
-    st.markdown(
-        f"""
-        <style>
-        .stApp {{
-            background-color: #2C2C2C; /* Dark background color */
-            color: #FFFFFF; /* Light text color */
-        }}
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
-     
-    """
+
     st.header("About the Application")
     st.write("Welcome to our application developed to assist parents and caregivers in the early diagnosis of autism spectrum disorder (ASD) in children. Our goal is to provide a user-friendly platform that utilizes behavioral observations and image analysis to predict the likelihood of autism in children at an early age.")
 
