@@ -115,6 +115,7 @@ def home():
 
 def predict():
     background_image_path_6 = os.path.join(base_path, 'img', 'B6.jpg')
+    background_image_path_7 = os.path.join(base_path, 'img', 'B7.jpg')
 
     # Render the background color
     st.markdown(
@@ -172,8 +173,14 @@ def predict():
     with col2:
         st.header("Upload Image")
         uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
+
+        <div style="background-color: #5BFA27; padding: 10px;"> A child Making Eye contact </div>
+        
         st.image(background_image_path_6, use_column_width=True)
-    
+        
+        <div style="background-color: #5BFA27; padding: 10px;"> A Child Pointing at an object </div>
+       
+        background_image_path_6 = os.path.join(base_path, 'img', 'B7.jpg')
 
     if st.button("Predict"):
         if uploaded_file is not None:
