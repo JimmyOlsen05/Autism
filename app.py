@@ -44,7 +44,7 @@ meta_model = safe_load_model(os.path.join(base_path, 'Meta_Model.save.h5'))
 # Load additional data needed for predictions
 try:
     with open(os.path.join(base_path, 'autism_data.pkl'), 'rb') as f:
-        encoded_sequences, categorical_cols, max_sequence_length, X_train_cat = dill.load(f)
+        encoded_sequences, sequence, categorical_features, categorical_cols, max_sequence_length, X_train_cat = dill.load(f)
     st.write("Data Loaded Succesfully ")
 except Exception as e:
     st.error(f"Failed to load additional data: {e}")
