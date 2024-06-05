@@ -70,12 +70,13 @@ def home():
     st.title("Home")
     
     st.header("Welcome to the Early Autism Prediction in children App")
-    # Load the background image
+    # Load the background images
     background_image_path = os.path.join(base_path, "img", "B1.jpg")
     background_image_path_2 = os.path.join(base_path, 'img', 'B2.jpg')
     background_image_path_3 = os.path.join(base_path, 'img', 'B3.jpg')
     background_image_path_4 = os.path.join(base_path, 'img', 'B4.jpg')
     background_image_path_5 = os.path.join(base_path, 'img', 'B5.jpg')
+    background_image_path_6 = os.path.join(base_path, 'img', 'B5.jpg')
 
     # Check if the image file exists
     if not os.path.isfile(background_image_path):
@@ -170,7 +171,7 @@ def predict():
     with col2:
         st.header("Upload Image")
         uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
-
+        st.image(background_image_path_6, use_column_width=True)
     
 
     if st.button("Predict"):
