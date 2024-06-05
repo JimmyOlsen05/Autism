@@ -76,7 +76,7 @@ def home():
     background_image_path_3 = os.path.join(base_path, 'img', 'B3.jpg')
     background_image_path_4 = os.path.join(base_path, 'img', 'B4.jpg')
     background_image_path_5 = os.path.join(base_path, 'img', 'B5.jpg')
-    background_image_path_6 = os.path.join(base_path, 'img', 'B5.jpg')
+    background_image_path_6 = os.path.join(base_path, 'img', 'B6.jpg')
 
     # Check if the image file exists
     if not os.path.isfile(background_image_path):
