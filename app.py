@@ -181,7 +181,7 @@ def predict():
         st.image(background_image_path_6, use_column_width=True)
         
         
-       st.markdown(
+        st.markdown(
         """
         <div style="background-color: #5BFA27; padding: 10px;"> A Child Pointing at an object 
         </div>
