@@ -135,7 +135,7 @@ def predict():
     st.title("Autism Prediction App")
 
     col1, col2 = st.columns(2)
-    st.markdown("<div class='question-field'> 
+    
 
     A_questions = [
         "Does your child look at you when you call his/her name?",
@@ -149,7 +149,7 @@ def predict():
         "Does your child use simple gestures? (e.g. wave goodbye)",
         "Does your child stare at nothing with no apparent purpose?"
     ]
-    </div>", unsafe_allow_html=True)
+    
     with col1:
         st.header("ANSWER THE FOLLOWING QUESTIONS")
         
