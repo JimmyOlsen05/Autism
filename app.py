@@ -1,4 +1,3 @@
-
 import streamlit as st
 import numpy as np
 import tensorflow as tf
@@ -45,7 +44,7 @@ meta_model = safe_load_model(os.path.join(base_path, 'Meta_Model.save.h5'))
 try:
     with open(os.path.join(base_path, 'autism_data.pkl'), 'rb') as f:
         encoded_sequences, categorical_cols, max_sequence_length, X_train_cat = dill.load(f)
-    st.write("Data Loaded Succesfully ")
+    st.write("Data Loaded Successfully")
 except Exception as e:
     st.error(f"Failed to load additional data: {e}")
 
@@ -73,10 +72,10 @@ def home():
     st.header("Welcome to the Early Autism Prediction in children App")
     # Load the background image
     background_image_path = os.path.join(base_path, "img", "B1.jpg")
-    background_image_path_2=os.path.join(base_path,'img','B2.jpg')
-    background_image_path_3=os.path.join(base_path,'img','B3.jpg')
-    background_image_path_4=os.path.join(base_path,'img','B4.jpg')
-    background_image_path_5=os.path.join(base_path,'img','B5.jpg')
+    background_image_path_2 = os.path.join(base_path, 'img', 'B2.jpg')
+    background_image_path_3 = os.path.join(base_path, 'img', 'B3.jpg')
+    background_image_path_4 = os.path.join(base_path, 'img', 'B4.jpg')
+    background_image_path_5 = os.path.join(base_path, 'img', 'B5.jpg')
 
     # Check if the image file exists
     if not os.path.isfile(background_image_path):
@@ -114,16 +113,14 @@ def home():
     st.header("Contact Us")
     st.write("Have questions or feedback? We'd love to hear from you! Feel free to reach out to us at [contact@autism-prediction.com](mailto:contact@autism-prediction.com) for any inquiries or assistance.")
 
-
-
 def predict():
     # Render the background color
     st.markdown(
         f"""
         <style>
         .stApp {{
-            background-color: #DAF7A6 ; /* Dark background color */
-            color: #FFFFFF; /* Light text color */
+            background-color: #DAF7A6 ; /* Light background color */
+            color: #000000; /* Dark text color */
         }}
         </style>
         """,
@@ -155,6 +152,14 @@ def predict():
     with col2:
         st.header("Upload Image")
         uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
+
+    # Add additional categorical features input
+    st.header("Additional Information")
+    categorical_features = [
+        st.selectbox("Select child's gender", [0, 1]),  # Assuming 0 for male and 1 for female
+        st.selectbox("Select family history of autism", [0, 1]),  # Assuming 0 for no and 1 for yes
+        # Add more categorical features as needed
+    ]
 
     if st.button("Predict"):
         if uploaded_file is not None:
