@@ -146,6 +146,13 @@ def predict():
     with col1:
         st.header("ANSWER THE FOLLOWING QUESTIONS")
         st.write("Select '1' or '0' from the dropdowns")
+        st.markdown(
+        """
+        <div style="background-color: #f0f0f0; padding: 10px;">
+        Select '1' or '0' from the dropdowns
+        </div>
+        """, unsafe_allow_html=True)
+
         st.write(" i.e Where 1 = Always, Usually or Sometimes and 0 = Rarely or Never ")
         sequence = [st.selectbox(f"Q{i+1} : {A_questions[i]}", [0, 1]) for i in range(10)]
         categorical_features = [0] * len(X_train_cat.columns)
