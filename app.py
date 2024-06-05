@@ -148,6 +148,7 @@ def predict():
         st.write("Select '1' or '0' from the dropdowns")
         st.write(" i.e Where 1 = Always, Usually or Sometimes and 0 = Rarely or Never ")
         sequence = [st.selectbox(f"Q{i+1} : {A_questions[i]}", [0, 1]) for i in range(10)]
+        categorical_features = [0] * len(X_train_cat.columns)
 
     with col2:
         st.header("Upload Image")
