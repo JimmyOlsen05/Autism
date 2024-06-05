@@ -76,7 +76,6 @@ def home():
     background_image_path_3 = os.path.join(base_path, 'img', 'B3.jpg')
     background_image_path_4 = os.path.join(base_path, 'img', 'B4.jpg')
     background_image_path_5 = os.path.join(base_path, 'img', 'B5.jpg')
-    background_image_path_6 = os.path.join(base_path, 'img', 'B6.jpg')
 
     # Check if the image file exists
     if not os.path.isfile(background_image_path):
@@ -115,6 +114,8 @@ def home():
     st.write("Have questions or feedback? We'd love to hear from you! Feel free to reach out to us at [contact@autism-prediction.com](mailto:contact@autism-prediction.com) for any inquiries or assistance.")
 
 def predict():
+    background_image_path_6 = os.path.join(base_path, 'img', 'B6.jpg')
+
     # Render the background color
     st.markdown(
         f"""
