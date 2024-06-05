@@ -153,13 +153,7 @@ def predict():
         st.header("Upload Image")
         uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
 
-    # Add additional categorical features input
-    st.header("Additional Information")
-    categorical_features = [
-        st.selectbox("Select child's gender", [0, 1]),  # Assuming 0 for male and 1 for female
-        st.selectbox("Select family history of autism", [0, 1]),  # Assuming 0 for no and 1 for yes
-        # Add more categorical features as needed
-    ]
+    
 
     if st.button("Predict"):
         if uploaded_file is not None:
