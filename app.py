@@ -186,8 +186,7 @@ def predict():
         <div style="background-color: #FAE727 ; padding: 10px;"> A Child Pointing at an object 
         </div>
         """, unsafe_allow_html=True)
-        background_image_path_7 = os.path.join(base_path, 'img', 'B7.jpg')
-
+        st.image(background_image_path_7, use_column_width=True)
     if st.button("Predict"):
         if uploaded_file is not None:
             temp_image_path = os.path.join(base_path, "temp_image.jpg")
