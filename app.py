@@ -123,12 +123,12 @@ def predict():
         <style>
         .stApp {{
             background-color: #090A09 ;
-            color: #EEF5EB; /* text color */
+            color: #FFFFFF; /* text color */
         }}
          .question-field {{
             background-color: #f0f0f0; /* Light grey background color */
             padding: 10px;
-            border-radius: 5px;
+            border-radius: 20px;
             margin-bottom: 10px;
         }}
         </style>
@@ -159,9 +159,9 @@ def predict():
         st.markdown(
         """
         <div style="background-color: #5BFA27; padding: 10px;">
-        Select '1' or '0' from the dropdowns
+        Select 'Yes' or '0' from the dropdowns
         
-        i.e Where 1 = Always, Usually or Sometimes and 0 = Rarely or Never
+        i.e Where Yes = Always, Usually or Sometimes and No = Rarely or Never
          
         </div>
         """, unsafe_allow_html=True)
