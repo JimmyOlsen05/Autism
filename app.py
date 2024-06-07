@@ -123,7 +123,7 @@ def predict():
         <style>
         .stApp {{
             background-color: #090A09 ;
-            color: #49A71A; /* text color */
+            color: #EEF5EB; /* text color */
         }}
          .question-field {{
             background-color: #f0f0f0; /* Light grey background color */
