@@ -165,9 +165,12 @@ def predict():
          
         </div>
         """, unsafe_allow_html=True)
-        No=0
-        Yes=1
-        sequence = [st.selectbox(f"Q{i+1} : {A_questions[i]}", [No, Yes]) for i in range(10)]
+       
+        sequence = [st.selectbox(f"Q{i+1} : {A_questions[i]}", ["No", "Yes"]) for i in range(10)]
+        if sequence == "No":
+            sequence = 0
+        else:
+            sequence = 1
         categorical_features = [0] * len(X_train_cat.columns)
     
 
