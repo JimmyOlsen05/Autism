@@ -122,7 +122,7 @@ def predict():
         f"""
         <style>
         .stApp {{
-            background-color: #DAF7A6 ; /* Light background color */
+            background-color: #1B1A11 ;
             color: #000000; /* Dark text color */
         }}
          .question-field {{
@@ -165,12 +165,11 @@ def predict():
          
         </div>
         """, unsafe_allow_html=True)
-       
-        sequence = [st.selectbox(f"Q{i+1} : {A_questions[i]}", ["No", "Yes"]) for i in range(10)]
-        if sequence == "No":
-            sequence = 0
-        else:
-            sequence = 1
+        options = {"No": 0, "Yes": 1}
+        sequence = [options[st.selectbox(f"Q{i+1} : {A_questions[i]}", options.keys())] for i in range(10)]
+
+        # sequence = [st.selectbox(f"Q{i+1} : {A_questions[i]}", [0, 1]) for i in range(10)]
+        
         categorical_features = [0] * len(X_train_cat.columns)
     
 
