@@ -122,8 +122,8 @@ def predict():
         f"""
         <style>
         .stApp {{
-            background-color: #1B1A11 ;
-            color: #1AA783; /* text color */
+            background-color: #090A09 ;
+            color: #49A71A; /* text color */
         }}
          .question-field {{
             background-color: #f0f0f0; /* Light grey background color */
