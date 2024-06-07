@@ -178,7 +178,7 @@ def predict():
         uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
         st.markdown(
         """
-        <div style="background-color: #FAE727 ; padding: 10px;"> A child Making Eye contact 
+        <div style="background-color: #BB7BCC ; padding: 10px;"> A child Making Eye contact 
         </div>
         """, unsafe_allow_html=True)
         st.image(background_image_path_6, use_column_width=True)
@@ -186,7 +186,7 @@ def predict():
         
         st.markdown(
         """
-        <div style="background-color: #FAE727 ; padding: 10px;"> A Child Pointing at an object 
+        <div style="background-color: #BB7BCC ; padding: 10px;"> A Child Pointing at an object 
         </div>
         """, unsafe_allow_html=True)
         st.image(background_image_path_7, use_column_width=True)
