@@ -66,79 +66,74 @@ def predict_with_cnn(image_path):
 
 # Define page functions
 def home():
-    # Render content on top of the background image
     st.title("Home")
-    
     st.header("Welcome to the Early Autism Prediction in children App")
+    
     # Load the background images
-    background_image_path = os.path.join(base_path, "img", "B1.jpg")
-    background_image_path_2 = os.path.join(base_path, 'img', 'B2.jpg')
-    background_image_path_3 = os.path.join(base_path, 'img', 'B3.jpg')
-    background_image_path_4 = os.path.join(base_path, 'img', 'B4.jpg')
-    background_image_path_5 = os.path.join(base_path, 'img', 'B5.jpg')
-
-    # Check if the image file exists
-    if not os.path.isfile(background_image_path):
-        st.error("Background image not found!")
-        return
-
-    # Render the background image
-    st.image(background_image_path, use_column_width=True)
-
+    background_images = [
+        "B1.jpg", "B2.jpg", "B3.jpg", "B4.jpg", "B5.jpg"
+    ]
+    
+    for img in background_images:
+        background_image_path = os.path.join(base_path, "img", img)
+        if not os.path.isfile(background_image_path):
+            st.error("Background image not found!")
+            return
+        st.image(background_image_path, use_column_width=True)
+    
     st.header("About the Application")
     st.write("Welcome to our application developed to assist parents and caregivers in the early diagnosis of autism spectrum disorder (ASD) in children. Our goal is to provide a user-friendly platform that utilizes behavioral observations and image analysis to predict the likelihood of autism in children at an early age.")
-
+    
     st.header("How it Works")
     st.write("Our application combines machine learning algorithms with behavioral assessments and image recognition technology to offer accurate predictions. Parents and caregivers can answer a series of questions related to the child's behavior, as well as upload an image of the child. Based on this information, our models generate predictions indicating whether the child is likely to be autistic or not.")
+    
     st.header("What is Autism")
-    st.image(background_image_path_4, use_column_width=True)
     st.write("Autism, or autism spectrum disorder (ASD), refers to a broad range of conditions characterized by challenges with social skills, repetitive behaviors, speech and nonverbal communication. According to the Centers for Disease Control, autism affects an estimated 1 in 36 children and 1 in 45 adults in the United States today.")
+    
     st.header("What are the Causes of Autism")
     st.write("There are many causes of autism. Research suggests that autism spectrum disorder (ASD) develops from a combination of: Genetic influences and Environmental influences, including social determinants These factors appear to increase the risk of autism and shape the type of autism that a child will develop. However, it’s important to keep in mind that increased risk is not the same as a cause. For example, some gene changes associated with autism can also be found in people who don’t have the disorder. Similarly, not everyone exposed to an environmental risk factor for autism will develop the disorder. In fact, most will not.")
+    
     st.header("What are the Symptoms of Autism")
-    st.image(background_image_path_3, use_column_width=True)
-    st.write(" The two core autism symptoms are: Challenges with social communication and interaction skills and Restricted and repetitive behaviors")
+    st.write("The two core autism symptoms are: Challenges with social communication and interaction skills and Restricted and repetitive behaviors")
     st.write("While autism spectrum disorder looks different from person to person, doctors look for these two symptoms when making a diagnosis. They also rate the severity of these symptoms based on the level of daily support the person requires. Severity levels range from level 1 (requiring support) to level 3 (requiring very substantial support). Not all people with ASD present these two core symptoms the same way. Additionally, some people without ASD may exhibit these signs.")
+    
     st.header("Importance of Early Detection")
     st.write("Early detection of autism spectrum disorder is crucial for ensuring timely intervention and support for children. By identifying potential signs of autism at an early age, parents and caregivers can take proactive steps to seek professional evaluation and access appropriate resources and therapies for their child's development.")
-    st.header("Can Autism Be Prevented ?")
+    
+    st.header("Can Autism Be Prevented?")
     st.write("Can autism be prevented? You can’t prevent autism, but you can lower your risk of having a baby with the condition by taking certain steps, including: Live a healthy lifestyle: Make sure you see your healthcare provider regularly, eat a nutritious diet and exercise. Get prenatal care, and take your provider’s recommended vitamins and supplements. Take care with medications: Ask your healthcare provider which medications are safe and which you should stop taking during your pregnancy. Don’t drink: No kind and no amount of alcohol is safe during pregnancy. Keep up with your vaccinations: Get all of your provider’s recommended vaccines, including the German measles (rubella) vaccine, before you get pregnant. This vaccine can prevent rubella-associated autism.")
-    st.image(background_image_path_2, use_column_width=True)
+    
     st.header("Disclaimer")
     st.write("It's important to note that the predictions provided by our models are for informational purposes only and should not replace professional medical advice. We encourage users to consult healthcare professionals for accurate diagnosis and personalized treatment recommendations tailored to their child's unique needs.")
-    st.image(background_image_path_5, use_column_width=True)
+    
     st.header("Get Started")
     st.write("To get started, simply navigate to the 'Predict' page using the sidebar menu. Follow the instructions to answer the behavioral questions and upload an image of your child. Our models will then generate a prediction indicating the likelihood of autism.")
-
+    
     st.header("Contact Us")
     st.write("Have questions or feedback? We'd love to hear from you! Feel free to reach out to us at [contact@autism-prediction.com](mailto:contact@autism-prediction.com) for any inquiries or assistance.")
 
 def predict():
-    background_image_path_6 = os.path.join(base_path, 'img', 'B6.jpg')
-    background_image_path_7 = os.path.join(base_path, 'img', 'B7.jpg')
-
-    # Render the background color
     st.markdown(
-        f"""
+        """
         <style>
-        .stApp {{
-            background-color: #090A09 ;
+        .stApp {
+            background-color: #090A09;
             color: #FFFFFF; /* text color */
-        }}
-         .question-field {{
+        }
+        .question-field {
             background-color: #f0f0f0; /* Light grey background color */
             padding: 10px;
             border-radius: 20px;
             margin-bottom: 10px;
-        }}
+        }
         </style>
         """,
         unsafe_allow_html=True
     )
+
     st.title("Autism Prediction App")
 
     col1, col2 = st.columns(2)
-    
 
     A_questions = [
         "Does your child look at you when you call his/her name?",
@@ -152,44 +147,43 @@ def predict():
         "Does your child use simple gestures? (e.g. wave goodbye)",
         "Does your child stare at nothing with no apparent purpose?"
     ]
-    
+
     with col1:
         st.header("ANSWER THE FOLLOWING QUESTIONS")
-        
         st.markdown(
-        """
-        <div style="background-color: #626660; padding: 10px; border-radius: 20px;">
-        Select 'Yes' or 'No' from the dropdowns
-        
-        i.e Where Yes = Always, Usually or Sometimes and No = Rarely or Never
-         
-        </div>
-        """, unsafe_allow_html=True)
+            """
+            <div style="background-color: #626660; padding: 10px; border-radius: 20px;">
+            Select 'Yes' or 'No' from the dropdowns
+            
+            i.e Where Yes = Always, Usually or Sometimes and No = Rarely or Never
+            
+            </div>
+            """, unsafe_allow_html=True
+        )
+
         options = {"No": 0, "Yes": 1}
         sequence = [options[st.selectbox(f"Q{i+1} : {A_questions[i]}", options.keys())] for i in range(10)]
-
-        # sequence = [st.selectbox(f"Q{i+1} : {A_questions[i]}", [0, 1]) for i in range(10)]
-        
         categorical_features = [0] * len(X_train_cat.columns)
-    
 
     with col2:
         st.header("Upload Image")
         uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
         st.markdown(
-        """
-        <div style="background-color: #BB7BCC ; padding: 10px;"> A child Making Eye contact 
-        </div>
-        """, unsafe_allow_html=True)
+            """
+            <div style="background-color: #BB7BCC; padding: 10px;">A child making eye contact</div>
+            """, unsafe_allow_html=True
+        )
+        background_image_path_6 = os.path.join(base_path, 'img', 'B6.jpg')
         st.image(background_image_path_6, use_column_width=True)
-        
-        
+
         st.markdown(
-        """
-        <div style="background-color: #BB7BCC ; padding: 10px;"> A Child Pointing at an object 
-        </div>
-        """, unsafe_allow_html=True)
+            """
+            <div style="background-color: #BB7BCC; padding: 10px;">A child pointing at an object</div>
+            """, unsafe_allow_html=True
+        )
+        background_image_path_7 = os.path.join(base_path, 'img', 'B7.jpg')
         st.image(background_image_path_7, use_column_width=True)
+
     if st.button("Predict"):
         if uploaded_file is not None:
             temp_image_path = os.path.join(base_path, "temp_image.jpg")
