@@ -158,7 +158,7 @@ def predict():
         
         st.markdown(
         """
-        <div style="background-color: #A0F574; padding: 10px; border-radius: 20px;">
+        <div style="background-color: #626660; padding: 10px; border-radius: 20px;">
         Select 'Yes' or 'No' from the dropdowns
         
         i.e Where Yes = Always, Usually or Sometimes and No = Rarely or Never
