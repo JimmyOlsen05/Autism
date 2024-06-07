@@ -166,7 +166,7 @@ def predict():
         </div>
         """, unsafe_allow_html=True)
 
-        sequence = [st.selectbox(f"Q{i+1} : {A_questions[i]}", [0, 1]) for i in range(10)]
+        sequence = [st.selectbox(f"Q{i+1} : {A_questions[i]}", [No, Yes]) for i in range(10)]
         categorical_features = [0] * len(X_train_cat.columns)
     
 
