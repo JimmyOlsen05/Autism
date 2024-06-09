@@ -6,6 +6,8 @@ from tensorflow.keras.preprocessing import image
 from keras.preprocessing.sequence import pad_sequences
 import dill
 import os
+import io
+import imghdr
 
 # Function to load models safely
 def safe_load_model(model_path):
@@ -64,15 +66,19 @@ def predict_with_cnn(image_path):
     prediction = cnn_model.predict(x)
     return prediction[0][0]
 
+# Security function to check file type
+def is_valid_image(file):
+    valid_image_formats = ["jpeg", "png", "gif", "bmp"]
+    file_format = imghdr.what(file)
+    return file_format in valid_image_formats
+
 # Define page functions
 def home():
     st.title("Home")
-    st.header("Welcome to the Early Autism Prediction in children App")
-    
+    st.header("Welcome to the Early Autism Prediction in Children App")
+
     # Load the background images
-    background_images = [
-        "B1.jpg", "B2.jpg", "B3.jpg", "B4.jpg", "B5.jpg"
-    ]
+    background_images = ["B1.jpg", "B2.jpg", "B3.jpg", "B4.jpg", "B5.jpg"]
     
     for img in background_images:
         background_image_path = os.path.join(base_path, "img", img)
@@ -91,7 +97,7 @@ def home():
     st.write("Autism, or autism spectrum disorder (ASD), refers to a broad range of conditions characterized by challenges with social skills, repetitive behaviors, speech and nonverbal communication. According to the Centers for Disease Control, autism affects an estimated 1 in 36 children and 1 in 45 adults in the United States today.")
     
     st.header("What are the Causes of Autism")
-    st.write("There are many causes of autism. Research suggests that autism spectrum disorder (ASD) develops from a combination of: Genetic influences and Environmental influences, including social determinants These factors appear to increase the risk of autism and shape the type of autism that a child will develop. However, it’s important to keep in mind that increased risk is not the same as a cause. For example, some gene changes associated with autism can also be found in people who don’t have the disorder. Similarly, not everyone exposed to an environmental risk factor for autism will develop the disorder. In fact, most will not.")
+    st.write("There are many causes of autism. Research suggests that autism spectrum disorder (ASD) develops from a combination of: Genetic influences and Environmental influences, including social determinants. These factors appear to increase the risk of autism and shape the type of autism that a child will develop. However, it’s important to keep in mind that increased risk is not the same as a cause. For example, some gene changes associated with autism can also be found in people who don’t have the disorder. Similarly, not everyone exposed to an environmental risk factor for autism will develop the disorder. In fact, most will not.")
     
     st.header("What are the Symptoms of Autism")
     st.write("The two core autism symptoms are: Challenges with social communication and interaction skills and Restricted and repetitive behaviors")
@@ -113,24 +119,6 @@ def home():
     st.write("Have questions or feedback? We'd love to hear from you! Feel free to reach out to us at [contact@autism-prediction.com](mailto:contact@autism-prediction.com) for any inquiries or assistance.")
 
 def predict():
-    st.markdown(
-        """
-        <style>
-        .stApp {
-            background-color: #090A09;
-            color: #FFFFFF; /* text color */
-        }
-        .question-field {
-            background-color: #f0f0f0; /* Light grey background color */
-            padding: 10px;
-            border-radius: 20px;
-            margin-bottom: 10px;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
-
     st.title("Autism Prediction App")
 
     col1, col2 = st.columns(2)
@@ -148,61 +136,47 @@ def predict():
         "Does your child stare at nothing with no apparent purpose?"
     ]
 
+    options = {"No": 0, "Yes": 1}
+
     with col1:
         st.header("ANSWER THE FOLLOWING QUESTIONS")
-        st.markdown(
-            """
-            <div style="background-color: #626660; padding: 10px; border-radius: 20px;">
-            Select 'Yes' or 'No' from the dropdowns
-            
-            i.e Where Yes = Always, Usually or Sometimes and No = Rarely or Never
-            
-            </div>
-            """, unsafe_allow_html=True
-        )
-
-        options = {"No": 0, "Yes": 1}
+        st.write("Select 'Yes' or 'No' from the dropdowns")
+        st.write("i.e Where Yes = Always, Usually or Sometimes and No = Rarely or Never")
         sequence = [options[st.selectbox(f"Q{i+1} : {A_questions[i]}", options.keys())] for i in range(10)]
-        categorical_features = [0] * len(X_train_cat.columns)
 
     with col2:
         st.header("Upload Image")
         uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
-        st.markdown(
-            """
-            <div style="background-color: #BB7BCC; padding: 10px;">A child making eye contact</div>
-            """, unsafe_allow_html=True
-        )
-        background_image_path_6 = os.path.join(base_path, 'img', 'B6.jpg')
-        st.image(background_image_path_6, use_column_width=True)
 
-        st.markdown(
-            """
-            <div style="background-color: #BB7BCC; padding: 10px;">A child pointing at an object</div>
-            """, unsafe_allow_html=True
-        )
-        background_image_path_7 = os.path.join(base_path, 'img', 'B7.jpg')
-        st.image(background_image_path_7, use_column_width=True)
+    consent = st.checkbox("I consent to the privacy policy and the processing of the uploaded image for prediction purposes.")
 
-    if st.button("Predict"):
+    if st.button("Predict") and consent:
         if uploaded_file is not None:
             temp_image_path = os.path.join(base_path, "temp_image.jpg")
             with open(temp_image_path, "wb") as f:
                 f.write(uploaded_file.getbuffer())
 
-            if lstm_model and cnn_model and meta_model:
-                with st.spinner('Predicting...'):
-                    lstm_prediction = predict_with_lstm(sequence, categorical_features)
-                    cnn_prediction = predict_with_cnn(temp_image_path)
-                    ensemble_prediction = meta_model.predict([np.array([lstm_prediction]), np.array([cnn_prediction])])
+            try:
+                if lstm_model and cnn_model and meta_model:
+                    with st.spinner('Predicting...'):
+                        lstm_prediction = predict_with_lstm(sequence, categorical_features)
+                        cnn_prediction = predict_with_cnn(temp_image_path)
+                        ensemble_prediction = meta_model.predict([np.array([lstm_prediction]), np.array([cnn_prediction])])
 
-                predicted_class = 1 if ensemble_prediction > 0.5 else 0
-                st.success("Prediction: Autistic" if predicted_class == 1 else "Prediction: Non-Autistic")
-                st.write(f"Predicted Class (Ensemble): {predicted_class}")
-            else:
-                st.error("One or more models failed to load. Please check the logs for details.")
+                    predicted_class = 1 if ensemble_prediction > 0.5 else 0
+                    st.success("Prediction: Autistic" if predicted_class == 1 else "Prediction: Non-Autistic")
+                    st.write(f"Predicted Class (Ensemble): {predicted_class}")
+                else:
+                    st.error("One or more models failed to load. Please check the logs for details.")
+            finally:
+                # Ensure the temporary image file is deleted after use
+                if os.path.exists(temp_image_path):
+                    os.remove(temp_image_path)
         else:
             st.warning("Please upload an image file.")
+    elif not consent:
+        st.warning("Please consent to the privacy policy before proceeding.")
+
 
 def contact():
     st.title("Contact")
