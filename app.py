@@ -145,8 +145,24 @@ def predict():
         sequence = [options[st.selectbox(f"Q{i+1} : {A_questions[i]}", options.keys())] for i in range(10)]
 
     with col2:
+        with col2:
         st.header("Upload Image")
         uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
+        st.markdown(
+            """
+            <div style="background-color: #BB7BCC; padding: 10px;">A child making eye contact</div>
+            """, unsafe_allow_html=True
+        )
+        background_image_path_6 = os.path.join(base_path, 'img', 'B6.jpg')
+        st.image(background_image_path_6, use_column_width=True)
+
+        st.markdown(
+            """
+            <div style="background-color: #BB7BCC; padding: 10px;">A child pointing at an object</div>
+            """, unsafe_allow_html=True
+        )
+        background_image_path_7 = os.path.join(base_path, 'img', 'B7.jpg')
+        st.image(background_image_path_7, use_column_width=True)
 
     consent = st.checkbox("I consent to the privacy policy and the processing of the uploaded image for prediction purposes.")
 
