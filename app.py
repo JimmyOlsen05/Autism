@@ -137,7 +137,7 @@ def predict():
     ]
 
     options = {"No": 0, "Yes": 1}
-
+    categorical_features = [0] * len(X_train_cat.columns)
     with col1:
         st.header("ANSWER THE FOLLOWING QUESTIONS")
         st.write("Select 'Yes' or 'No' from the dropdowns")
