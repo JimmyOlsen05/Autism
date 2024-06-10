@@ -145,7 +145,7 @@ def predict():
         sequence = [options[st.selectbox(f"Q{i+1} : {A_questions[i]}", options.keys())] for i in range(10)]
 
     with col2:
-        with col2:
+        
         st.header("Upload Image")
         uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
         st.markdown(
