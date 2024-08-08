@@ -1,28 +1,21 @@
 import streamlit as st
 import numpy as np
 import tensorflow as tf
-from tensorflow import keras
-from keras.models import load_model
-from keras.preprocessing import image
-from keras.layers import Input, Concatenate, Dense, InputLayer
-from keras.models import Model
-from keras.mixed_precision import Policy as DTypePolicy
+from tensorflow.keras.models import load_model
+from tensorflow.keras.preprocessing import image
+from tensorflow.keras.layers import Input, Concatenate, Dense, InputLayer
+from tensorflow.keras.models import Model
+from tensorflow.keras.mixed_precision import Policy as DTypePolicy
 from Pyfhel import Pyfhel
 import os
 from io import BytesIO
-
-
 
 # Encryption setup
 HE = Pyfhel()
 HE.contextGen(scheme='bfv', n=2**13, t_bits=20)
 HE.keyGen()
 
-# Load models
-base_path = os.path.dirname(os.path.abspath(__file__))
-if not os.path.exists(base_path):
-    base_path = os.getcwd()
-
+# Define custom layers and objects
 class CustomInputLayer(InputLayer):
     def __init__(self, batch_shape=None, **kwargs):
         if batch_shape:
@@ -35,6 +28,7 @@ class CustomInputLayer(InputLayer):
             config['input_shape'] = config.pop('batch_shape')[1:]
         return cls(**config)
 
+# Model loading function with detailed error logging
 @st.cache_resource
 def load_models():
     custom_objects = {
@@ -45,16 +39,22 @@ def load_models():
     def load_model_safely(model_path, custom_objects):
         try:
             return load_model(model_path, custom_objects=custom_objects)
-        except:
+        except Exception as e:
+            print(f"Error loading model with load_model: {e}")
             try:
                 return tf.keras.models.load_model(model_path, custom_objects=custom_objects)
-            except:
+            except Exception as e:
+                print(f"Error loading model with tf.keras.models.load_model: {e}")
                 try:
                     return tf.saved_model.load(model_path)
                 except Exception as e:
-                    print(f"Error loading model from {model_path}: {e}")
+                    print(f"Error loading model with tf.saved_model.load: {e}")
                     return None
 
+    base_path = os.path.dirname(os.path.abspath(__file__))
+    if not os.path.exists(base_path):
+        base_path = os.getcwd()
+        
     lstm_model = load_model_safely(os.path.join(base_path, 'LSTM_model.h5'), custom_objects)
     cnn_model = load_model_safely(os.path.join(base_path, 'model.keras'), custom_objects)
 
