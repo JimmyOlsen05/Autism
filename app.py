@@ -5,6 +5,7 @@ from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
 from tensorflow.keras.layers import Input, Concatenate, Dense, InputLayer
 from tensorflow.keras.models import Model
+from tensorflow.keras.mixed_precision import Policy as DTypePolicy
 from Pyfhel import Pyfhel
 import os
 from io import BytesIO
@@ -33,7 +34,10 @@ class CustomInputLayer(InputLayer):
 
 @st.cache_resource
 def load_models():
-    custom_objects = {'InputLayer': CustomInputLayer}
+    custom_objects = {
+        'InputLayer': CustomInputLayer,
+        'DTypePolicy': DTypePolicy
+    }
     lstm_model = load_model(os.path.join(base_path, 'LSTM_model.h5'), custom_objects=custom_objects)
     cnn_model = load_model(os.path.join(base_path, 'model.keras'), custom_objects=custom_objects)
     return lstm_model, cnn_model
@@ -48,6 +52,8 @@ dense = Dense(64, activation='relu')(concatenated)
 output = Dense(1, activation='sigmoid')(dense)
 meta_model = Model(inputs=[lstm_input, cnn_input], outputs=output)
 meta_model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+
+# ... (rest of the code remains the same)
 
 
 
