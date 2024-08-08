@@ -11,8 +11,7 @@ from Pyfhel import Pyfhel
 import os
 from io import BytesIO
 
-print(f"TensorFlow version: {tf.__version__}")
-print(f"Keras version: {tf.keras.__version__}")
+
 
 # Encryption setup
 HE = Pyfhel()
