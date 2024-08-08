@@ -5,24 +5,27 @@ from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
 from tensorflow.keras.layers import Input, Concatenate, Dense
 from tensorflow.keras.models import Model
-import tenseal as ts
+from Pyfhel import Pyfhel
 import os
-import dill
-from keras.preprocessing.sequence import pad_sequences
+from io import BytesIO
 
 # Encryption setup
-context = ts.context(
-    ts.SCHEME_TYPE.CKKS,
-    poly_modulus_degree=8192,  # Consider increasing this if necessary
-    coeff_mod_bit_sizes=[60, 40, 40, 60]
-)
-context.global_scale = 2**40
-context.generate_galois_keys()
+HE = Pyfhel()
+HE.contextGen(scheme='bfv', n=2**13, t_bits=20)
+HE.keyGen()
 
 # Load models
 base_path = os.path.dirname(os.path.abspath(__file__))
-lstm_model = load_model(os.path.join(base_path, 'LSTM_model.h5'))
-cnn_model = load_model(os.path.join(base_path, 'model.keras'))
+if not os.path.exists(base_path):
+    base_path = os.getcwd()
+
+@st.cache_resource
+def load_models():
+    lstm_model = load_model(os.path.join(base_path, 'LSTM_model.h5'))
+    cnn_model = load_model(os.path.join(base_path, 'model.keras'))
+    return lstm_model, cnn_model
+
+lstm_model, cnn_model = load_models()
 
 # Create and compile the meta-model
 lstm_input = Input(shape=(1,), name='lstm_input')
@@ -35,10 +38,10 @@ meta_model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accur
 
 # Encryption and decryption functions
 def encrypt_data(data):
-    return ts.ckks_vector(context, np.array(data).flatten())
+    return [HE.encrypt(float(x)) for x in np.array(data).flatten()]
 
 def decrypt_data(encrypted_data):
-    return np.array(encrypted_data.decrypt())
+    return np.array([float(HE.decrypt(x)) for x in encrypted_data])
 
 # Prediction functions
 @tf.function
@@ -54,12 +57,12 @@ def meta_predict(lstm_output, cnn_output):
     return meta_model([lstm_output, cnn_output])
 
 def predict_with_encrypted_lstm(encrypted_sequence, encrypted_categorical):
-    decrypted_sequence = np.array(decrypt_data(encrypted_sequence)).reshape((1, 10, 1))
-    decrypted_categorical = np.array(decrypt_data(encrypted_categorical)).reshape((1, 24))
+    decrypted_sequence = decrypt_data(encrypted_sequence).reshape((1, 10, 1))
+    decrypted_categorical = decrypt_data(encrypted_categorical).reshape((1, 24))
     return lstm_predict(decrypted_sequence, decrypted_categorical).numpy()
 
 def predict_with_encrypted_cnn(encrypted_image):
-    decrypted_image = np.array(decrypt_data(encrypted_image)).reshape((1, 150, 150, 3))
+    decrypted_image = decrypt_data(encrypted_image).reshape((1, 150, 150, 3))
     return cnn_predict(decrypted_image).numpy()
 
 # Input validation
@@ -69,11 +72,7 @@ def validate_inputs(sequence, categorical, img_array):
     assert img_array.shape == (150, 150, 3), "Image must be 150x150x3"
 
 # Main prediction function
-def predict_autism(sequence, categorical_features, image_path):
-    # Load and preprocess image
-    img = image.load_img(image_path, target_size=(150, 150))  # Resize to the expected input shape
-    img_array = image.img_to_array(img) / 255.0  # Normalize
-
+def predict_autism(sequence, categorical_features, img_array):
     # Validate inputs
     validate_inputs(sequence, categorical_features, img_array)
 
@@ -111,9 +110,9 @@ def predict():
         "Does your child point to indicate that s/he wants something? (e.g. a toy that is out of reach)",
         "Does your child point to share interest with you? (e.g. pointing at an interesting sight)",
         "Does your child pretend? (e.g. care for dolls, talk on a toy phone)",
-        "Does your child follow where you’re looking?",
+        "Does your child follow where you're looking?",
         "If you or someone else in the family is visibly upset, does your child show signs of wanting to comfort them? (e.g. stroking hair, hugging them)",
-        "Would you describe your child’s first words as Normal:",
+        "Would you describe your child's first words as Normal:",
         "Does your child use simple gestures? (e.g. wave goodbye)",
         "Does your child stare at nothing with no apparent purpose?"
     ]
@@ -127,23 +126,19 @@ def predict():
 
     if st.button("Predict") and consent:
         if uploaded_file is not None:
-            # Save the uploaded image temporarily
-            temp_image_path = os.path.join(base_path, "temp_image.jpg")
-            with open(temp_image_path, "wb") as f:
-                f.write(uploaded_file.getbuffer())
+            # Use BytesIO instead of saving to disk
+            img_bytes = uploaded_file.getvalue()
+            img = image.load_img(BytesIO(img_bytes), target_size=(150, 150))
+            img_array = image.img_to_array(img) / 255.0
 
             try:
-                predicted_class, prediction_probability = predict_autism(sequence, categorical_features, temp_image_path)
+                predicted_class, prediction_probability = predict_autism(sequence, categorical_features, img_array)
                 st.success("Prediction: Autistic" if predicted_class == 1 else "Prediction: Non-Autistic")
                 st.write(f"Prediction Probability: {prediction_probability:.4f}")
             except AssertionError as e:
                 st.error(f"Input validation failed: {e}")
             except Exception as e:
                 st.error(f"An error occurred: {e}")
-            finally:
-                # Delete the temporary image file
-                if os.path.exists(temp_image_path):
-                    os.remove(temp_image_path)
         else:
             st.warning("Please upload an image file.")
     elif not consent:
