@@ -3,7 +3,7 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
-from tensorflow.keras.layers import Input, Concatenate, Dense
+from tensorflow.keras.layers import Input, Concatenate, Dense, InputLayer
 from tensorflow.keras.models import Model
 from Pyfhel import Pyfhel
 import os
@@ -19,10 +19,23 @@ base_path = os.path.dirname(os.path.abspath(__file__))
 if not os.path.exists(base_path):
     base_path = os.getcwd()
 
+class CustomInputLayer(InputLayer):
+    def __init__(self, batch_shape=None, **kwargs):
+        if batch_shape:
+            kwargs['input_shape'] = batch_shape[1:]
+        super().__init__(**kwargs)
+
+    @classmethod
+    def from_config(cls, config):
+        if 'batch_shape' in config:
+            config['input_shape'] = config.pop('batch_shape')[1:]
+        return cls(**config)
+
 @st.cache_resource
 def load_models():
-    lstm_model = load_model(os.path.join(base_path, 'LSTM_model.h5'))
-    cnn_model = load_model(os.path.join(base_path, 'model.keras'))
+    custom_objects = {'InputLayer': CustomInputLayer}
+    lstm_model = load_model(os.path.join(base_path, 'LSTM_model.h5'), custom_objects=custom_objects)
+    cnn_model = load_model(os.path.join(base_path, 'model.keras'), custom_objects=custom_objects)
     return lstm_model, cnn_model
 
 lstm_model, cnn_model = load_models()
@@ -35,6 +48,8 @@ dense = Dense(64, activation='relu')(concatenated)
 output = Dense(1, activation='sigmoid')(dense)
 meta_model = Model(inputs=[lstm_input, cnn_input], outputs=output)
 meta_model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+
+
 
 # Encryption and decryption functions
 def encrypt_data(data):
