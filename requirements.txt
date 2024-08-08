@@ -1,8 +1,8 @@
 pillow
+dill==0.3.7
 streamlit==1.25.0
 numpy==1.23.5
 tensorflow==2.13.0
-tenseal==0.3.12
 keras==2.13.1
 dill==0.3.7
-
+git+https://github.com/OpenMined/TenSEAL.git
