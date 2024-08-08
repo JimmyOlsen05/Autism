@@ -1,14 +1,18 @@
 import streamlit as st
 import numpy as np
 import tensorflow as tf
-from tensorflow.keras.models import load_model
-from tensorflow.keras.preprocessing import image
-from tensorflow.keras.layers import Input, Concatenate, Dense, InputLayer
-from tensorflow.keras.models import Model
-from tensorflow.keras.mixed_precision import Policy as DTypePolicy
+from tensorflow import keras
+from keras.models import load_model
+from keras.preprocessing import image
+from keras.layers import Input, Concatenate, Dense, InputLayer
+from keras.models import Model
+from keras.mixed_precision import Policy as DTypePolicy
 from Pyfhel import Pyfhel
 import os
 from io import BytesIO
+
+print(f"TensorFlow version: {tf.__version__}")
+print(f"Keras version: {keras.__version__}")
 
 # Encryption setup
 HE = Pyfhel()
@@ -38,11 +42,28 @@ def load_models():
         'InputLayer': CustomInputLayer,
         'DTypePolicy': DTypePolicy
     }
-    lstm_model = load_model(os.path.join(base_path, 'LSTM_model.h5'), custom_objects=custom_objects)
-    cnn_model = load_model(os.path.join(base_path, 'model.keras'), custom_objects=custom_objects)
+    
+    # Add error handling and logging
+    try:
+        lstm_model = load_model(os.path.join(base_path, 'LSTM_model.h5'), custom_objects=custom_objects)
+    except Exception as e:
+        print(f"Error loading LSTM model: {e}")
+        lstm_model = None
+
+    try:
+        cnn_model = load_model(os.path.join(base_path, 'model.keras'), custom_objects=custom_objects)
+    except Exception as e:
+        print(f"Error loading CNN model: {e}")
+        cnn_model = None
+
     return lstm_model, cnn_model
 
 lstm_model, cnn_model = load_models()
+
+# Check if models loaded successfully
+if lstm_model is None or cnn_model is None:
+    st.error("Failed to load one or both models. Please check the error messages.")
+    st.stop()
 
 # Create and compile the meta-model
 lstm_input = Input(shape=(1,), name='lstm_input')
