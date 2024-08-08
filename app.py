@@ -12,7 +12,7 @@ import os
 from io import BytesIO
 
 print(f"TensorFlow version: {tf.__version__}")
-print(f"Keras version: {keras.__version__}")
+print(f"Keras version: {tf.keras.__version__}")
 
 # Encryption setup
 HE = Pyfhel()
@@ -43,18 +43,21 @@ def load_models():
         'DTypePolicy': DTypePolicy
     }
     
-    # Add error handling and logging
-    try:
-        lstm_model = load_model(os.path.join(base_path, 'LSTM_model.h5'), custom_objects=custom_objects)
-    except Exception as e:
-        print(f"Error loading LSTM model: {e}")
-        lstm_model = None
+    def load_model_safely(model_path, custom_objects):
+        try:
+            return load_model(model_path, custom_objects=custom_objects)
+        except:
+            try:
+                return tf.keras.models.load_model(model_path, custom_objects=custom_objects)
+            except:
+                try:
+                    return tf.saved_model.load(model_path)
+                except Exception as e:
+                    print(f"Error loading model from {model_path}: {e}")
+                    return None
 
-    try:
-        cnn_model = load_model(os.path.join(base_path, 'model.keras'), custom_objects=custom_objects)
-    except Exception as e:
-        print(f"Error loading CNN model: {e}")
-        cnn_model = None
+    lstm_model = load_model_safely(os.path.join(base_path, 'LSTM_model.h5'), custom_objects)
+    cnn_model = load_model_safely(os.path.join(base_path, 'model.keras'), custom_objects)
 
     return lstm_model, cnn_model
 
@@ -73,10 +76,6 @@ dense = Dense(64, activation='relu')(concatenated)
 output = Dense(1, activation='sigmoid')(dense)
 meta_model = Model(inputs=[lstm_input, cnn_input], outputs=output)
 meta_model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
-
-# ... (rest of the code remains the same)
-
-
 
 # Encryption and decryption functions
 def encrypt_data(data):
